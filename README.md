@@ -1,20 +1,12 @@
 # AIYZAN Intelligence — Website
 
-Multi-page static site. No build step, no dependencies — all CSS is inlined in each page.
+5 fully self-contained HTML pages. ALL images, CSS, and JavaScript are embedded
+inside each file — there is NO assets folder and nothing else to upload.
 
-## Deploy to GitHub Pages (3 steps)
-1. Create a repo (e.g. `aiyzan-website`) and upload **ALL files in this folder** —
-   the 5 HTML files **and the entire `assets/` folder** (drag the whole folder in,
-   or use "Add file → Upload files" and include the folder).
-2. Repo → Settings → Pages → Source: "Deploy from a branch" → Branch: `main`, folder: `/ (root)`.
-3. Wait ~1 minute. Site appears at `https://<username>.github.io/aiyzan-website/`
+## Deploy to GitHub Pages
+1. Upload these files to your repo ROOT: index.html, services.html,
+   portfolio.html, about.html, contact.html, .nojekyll
+2. Settings → Pages → Deploy from branch → main → / (root)
+3. Hard-refresh after deploy (Ctrl+Shift+R) to clear cached broken images.
 
-Important: `index.html` must sit at the repo ROOT (not inside a subfolder).
-
-## Files
-- index.html / services.html / portfolio.html / about.html / contact.html
-- assets/ — images only (logo + dashboard photos). CSS is already inside each page.
-- .nojekyll — tells GitHub Pages to serve files as-is.
-
-## Editing
-Contact email, links, and text are plain HTML — edit in any text editor.
+That's it. Nothing can 404 — every page works even opened directly from disk.
