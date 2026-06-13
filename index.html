@@ -416,10 +416,11 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
   <div class="container">
     <div class="sec-kicker"><span class="sec-num">★</span><span class="sec-eyebrow">Free Tools · Only at AIYZAN</span></div>
     <h2 class="sec-title">Try us before you <span class="gt">hire us</span></h2>
-    <p class="sec-intro">Two free decision tools, built with the same thinking we bring to engagements. 30 seconds each — no signup, no catch.</p>
+    <p class="sec-intro">Three free decision tools, built with the same thinking we bring to engagements. Under a minute each — no signup, no catch.</p>
     <div class="tool-tabs aos">
       <button class="tool-tab on" data-pane="paneCS">🧭 Clarity Score™</button>
       <button class="tool-tab" data-pane="paneNS">✦ North Star KPI Generator</button>
+      <button class="tool-tab" data-pane="paneFP">♥ Financial Pulse™</button>
     </div>
     <div id="paneCS" class="tool-pane">
       <div class="card beam aos" style="max-width:680px;margin:0 auto;padding:36px" id="csBox">
@@ -444,6 +445,27 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
       <div id="nsCta" style="display:none;text-align:center;margin-top:20px">
         <a class="btn btn-cyan" id="nsBtn" href="#">Get My Full KPI Framework →</a>
       </div></div>
+    </div>
+    <div id="paneFP" class="tool-pane" style="display:none">
+      <div class="card beam" style="max-width:680px;margin:0 auto;padding:36px">
+        <div style="display:flex;gap:8px;margin-bottom:22px" id="fpMode">
+          <button class="ns-chip on" data-m="org">🏢 Organization</button>
+          <button class="ns-chip" data-m="me">👤 Personal</button>
+        </div>
+        <div id="fpInputs" style="display:flex;flex-direction:column;gap:12px"></div>
+        <button class="btn btn-cyan" id="fpGo" style="border:none;width:100%;margin-top:18px">Check My Financial Pulse →</button>
+        <div id="fpR" style="display:none;margin-top:26px">
+          <div style="text-align:center">
+            <div style="font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--light)">Financial Pulse</div>
+            <div id="fpScore" class="gt" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:58px;font-weight:800;line-height:1.1"></div>
+            <div id="fpVerdict" style="font-size:16px;font-weight:700;color:var(--navy);margin:6px 0 18px"></div>
+          </div>
+          <div id="fpBars" style="display:flex;flex-direction:column;gap:11px;margin-bottom:18px"></div>
+          <p id="fpTip" style="background:linear-gradient(135deg,#EAF4FF,#F0EEFF);border-left:3px solid var(--cyan);border-radius:10px;padding:14px 16px;font-size:13px;color:#1A4A8A"></p>
+          <div style="text-align:center;margin-top:18px"><a id="fpCta" class="btn btn-cyan" href="#">Discuss My Results →</a></div>
+          <p style="font-size:10.5px;color:var(--light);text-align:center;margin-top:14px">Educational self-assessment only — not financial advice.</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -845,6 +867,71 @@ document.querySelectorAll('.tool-tab').forEach(function(t){
   var pane=document.getElementById(t.dataset.pane);pane.style.display='block';
  });
 });
+
+// ── AIYZAN Financial Pulse™ ──
+var fpDefs={
+ org:{fields:[["fpRev","Monthly revenue"],["fpExp","Monthly operating expenses"],["fpCash","Cash on hand"],["fpDebt","Monthly debt payments"],["fpTop","Monthly revenue from largest client"]],
+  calc:function(v){
+   var margin=v.fpRev>0?(v.fpRev-v.fpExp)/v.fpRev:-1;
+   var runway=v.fpExp>0?v.fpCash/v.fpExp:99;
+   var debt=v.fpRev>0?v.fpDebt/v.fpRev:1;
+   var conc=v.fpRev>0?v.fpTop/v.fpRev:1;
+   return [
+    ["Net Profit Margin",(margin*100).toFixed(1)+"%", margin>=0.15?25:margin>=0.05?18:margin>=0?10:0],
+    ["Cash Runway",runway>=99?"99+ mo":runway.toFixed(1)+" mo", runway>=6?25:runway>=3?18:runway>=1?8:0],
+    ["Debt-to-Revenue",(debt*100).toFixed(1)+"%", debt<0.10?25:debt<0.25?18:debt<0.40?8:0],
+    ["Client Concentration",(conc*100).toFixed(1)+"%", conc<0.20?25:conc<0.40?18:conc<0.60?8:0]];},
+  tips:["Margins below 5% leave no room for surprises — a pricing and cost-structure review is usually the fastest fix.",
+   "Under 3 months of runway means every decision is made under pressure. Cash visibility dashboards change that.",
+   "Debt service above 25% of revenue quietly caps your growth options. Map it before lenders do.",
+   "When one client is 40%+ of revenue, you have a boss, not a customer. Diversification needs a measured plan."]},
+ me:{fields:[["fpInc","Monthly income"],["fpExp2","Monthly expenses"],["fpSav","Total savings / emergency fund"],["fpDebt2","Monthly debt payments"]],
+  calc:function(v){
+   var sr=v.fpInc>0?(v.fpInc-v.fpExp2)/v.fpInc:-1;
+   var ef=v.fpExp2>0?v.fpSav/v.fpExp2:99;
+   var dti=v.fpInc>0?v.fpDebt2/v.fpInc:1;
+   var er=v.fpInc>0?v.fpExp2/v.fpInc:2;
+   return [
+    ["Savings Rate",(sr*100).toFixed(1)+"%", sr>=0.20?25:sr>=0.10?18:sr>0?10:0],
+    ["Emergency Fund",ef>=99?"99+ mo":ef.toFixed(1)+" mo", ef>=6?25:ef>=3?18:ef>=1?10:3],
+    ["Debt-to-Income",(dti*100).toFixed(1)+"%", dti<0.20?25:dti<0.36?18:dti<0.50?8:0],
+    ["Expense Ratio",(er*100).toFixed(1)+"%", er<0.80?25:er<0.95?15:er<=1?8:0]];},
+  tips:["Below 10% savings rate, wealth-building stalls. Track spending by category for one month — clarity precedes change.",
+   "Less than 3 months of expenses saved means one emergency becomes a crisis. Automate a fixed transfer first.",
+   "Debt payments above 36% of income is the threshold lenders worry about — and you should too.",
+   "Spending over 95% of income leaves nothing for the future. A simple budget dashboard makes the leaks visible."]}};
+var fpM='org';
+function fpRender(){
+ var d=fpDefs[fpM];
+ document.getElementById('fpInputs').innerHTML=d.fields.map(function(f){
+  return '<div><label style="font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:5px">'+f[1]+' <span style="font-weight:400;color:var(--light)">(your currency)</span></label><input id="'+f[0]+'" type="number" min="0" inputmode="decimal" placeholder="0" style="width:100%;padding:13px 15px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:15px;box-sizing:border-box"></div>'}).join('');
+ document.getElementById('fpR').style.display='none';
+}
+document.querySelectorAll('#fpMode .ns-chip').forEach(function(b){
+ b.addEventListener('click',function(){
+  document.querySelectorAll('#fpMode .ns-chip').forEach(function(x){x.classList.remove('on')});
+  b.classList.add('on');fpM=b.dataset.m;fpRender();});});
+document.getElementById('fpGo').addEventListener('click',function(){
+ var d=fpDefs[fpM],v={},ok=true;
+ d.fields.forEach(function(f){var x=parseFloat(document.getElementById(f[0]).value);if(isNaN(x)||x<0){ok=false}v[f[0]]=x});
+ if(!ok){alert('Please fill in every field with a number (use 0 if none).');return}
+ var rows=d.calc(v),total=0;
+ var bars=rows.map(function(r,i){total+=r[2];
+  var pct=r[2]/25*100,col=r[2]>=18?'#00C9A7':r[2]>=8?'#F5A623':'#E24B6E';
+  return '<div><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px"><span style="font-weight:700;color:var(--navy)">'+r[0]+'</span><span style="color:var(--muted)">'+r[1]+' · '+r[2]+'/25</span></div><div style="height:8px;border-radius:5px;background:#E9EEF8;overflow:hidden"><div style="height:100%;width:0;border-radius:5px;background:'+col+';transition:width .9s cubic-bezier(.2,.7,.3,1)" data-w="'+pct+'"></div></div></div>'}).join('');
+ document.getElementById('fpBars').innerHTML=bars;
+ var R=document.getElementById('fpR');R.style.display='block';
+ var n=0,t=setInterval(function(){n+=2;if(n>=total){n=total;clearInterval(t)}document.getElementById('fpScore').textContent=n+'/100'},22);
+ if(total===0)document.getElementById('fpScore').textContent='0/100';
+ setTimeout(function(){document.querySelectorAll('#fpBars [data-w]').forEach(function(b){b.style.width=b.dataset.w+'%'})},60);
+ var verd=total>=80?'Aurora-bright finances ✨':total>=60?'Steady glow — solid footing':total>=40?'Dim — needs attention':'Critical — act now';
+ document.getElementById('fpVerdict').textContent=verd;
+ var weakest=0;rows.forEach(function(r,i){if(r[2]<rows[weakest][2])weakest=i});
+ document.getElementById('fpTip').textContent='Biggest opportunity — '+rows[weakest][0]+': '+d.tips[weakest];
+ document.getElementById('fpCta').href='mailto:aiyzanintelligence@gmail.com?subject='+encodeURIComponent('Financial Pulse: '+total+'/100 ('+(fpM==='org'?'Organization':'Personal')+')')+'&body='+encodeURIComponent('Hi AIYZAN team,\n\nMy Financial Pulse score is '+total+'/100. My weakest vital sign is '+rows[weakest][0]+'. I would like to discuss building visibility around this.\n\n');
+ R.scrollIntoView({behavior:'smooth',block:'nearest'});
+});
+fpRender();
 </script>
 </body>
 </html>
